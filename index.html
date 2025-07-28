@@ -6,173 +6,299 @@
   <title>Christine's Main Quest Journey</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
-    body {
-      margin: 0;
-      font-family: 'Press Start 2P', monospace;
-      background: linear-gradient(to bottom, #ffeaf4, #d7f7ff);
-      overflow-x: hidden;
-    }
 
-    .map {
-      position: relative;
-      width: 100%;
-      min-height: 100vh;
-      background: url('assets/background.png') bottom repeat-x;
-      background-size: cover;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
+body {
+  margin: 0;
+  font-family: 'Press Start 2P', monospace;
+  background: linear-gradient(to bottom, #ffeaf4, #d7f7ff);
+  overflow-x: hidden;
+}
 
-    .title {
-      font-size: 3rem;
-      color: #fe0032;
-      text-shadow: 2px 2px black;
-      margin-bottom: 30px;
-      text-align: center;
-    }
+.map {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background: url('assets/background.png') bottom repeat-x;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
-    .nodes-container {
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      flex-wrap: nowrap;
-      gap: 80px;
-      position: relative;
-    }
+.title {
+  font-size: 3rem;
+  color: #fe0032;
+  text-shadow: 2px 2px black;
+  margin-bottom: 30px;
+  text-align: center;
+}
 
-    .node {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      text-align: center;
-      cursor: pointer;
-      animation: float 2s ease-in-out infinite;
-    }
+.nodes-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  flex-wrap: nowrap;
+  gap: 80px;
+  position: relative;
+}
 
-    .node img {
-      width: 64px;
-      height: 64px;
-    }
+.node {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  cursor: pointer;
+  animation: float 2s ease-in-out infinite;
+}
 
-    .node-text {
-      font-size: 8px;
-      color: #222;
-      margin-top: 6px;
-      max-width: 90px;
-      line-height: 1.4;
-      background: rgba(255, 255, 255, 0.9);
-      padding: 4px;
-      border-radius: 6px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-    }
+.node img {
+  width: 64px;
+  height: 64px;
+}
 
-    .node:hover img {
-      transform: rotateY(360deg) scale(1.1);
-      transition: transform 0.5s ease;
-    }
+.node-text {
+  font-size: 8px;
+  color: #222;
+  margin-top: 6px;
+  max-width: 90px;
+  line-height: 1.4;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 4px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
 
-    @keyframes float {
-      0%, 100% { transform: translateY(-10px); }
-      50% { transform: translateY(0); }
-    }
+.node:hover img {
+  transform: rotateY(360deg) scale(1.1);
+  transition: transform 0.5s ease;
+}
 
-    .character {
-      width: 64px;
-      transition: left 0.5s ease;
-      z-index: 10;
-      position: absolute;
-      bottom: 130px;
-      animation: bounceUp 1.5s infinite;
-    }
+@keyframes float {
+  0%, 100% { transform: translateY(-10px); }
+  50% { transform: translateY(0); }
+}
 
-    @keyframes bounceUp {
-      0%, 100% { transform: translateY(-10px); }
-      50% { transform: translateY(0); }
-    }
+.character {
+  width: 64px;
+  transition: left 0.5s ease;
+  z-index: 10;
+  position: absolute;
+  bottom: 130px;
+  animation: bounceUp 1.5s infinite;
+}
 
-    .xp-bar {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 60%;
-      height: 30px;
-      background: #ffe0eb;
-      border: 2px solid #ffaad4;
-      border-radius: 10px;
-      overflow: hidden;
-    }
+@keyframes bounceUp {
+  0%, 100% { transform: translateY(-10px); }
+  50% { transform: translateY(0); }
+}
 
-    .xp-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #fffbd5, #ffb84d);
-      width: 0%;
-      transition: width 0.5s ease;
-      animation: glow 1s infinite alternate;
-    }
+.xp-bar {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 30px;
+  background: #ffe0eb;
+  border: 2px solid #ffaad4;
+  border-radius: 10px;
+  overflow: hidden;
+}
 
-    @keyframes glow {
-      from { filter: brightness(1); }
-      to { filter: brightness(1.2); }
-    }
+.xp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #fffbd5, #ffb84d);
+  width: 0%;
+  transition: width 0.5s ease;
+  animation: glow 1s infinite alternate;
+}
 
-    .selected-box {
-      background: #ffeff7;
-      border: 3px solid #ffaad4;
-      padding: 20px 20px;
-      border-radius: 12px;
-      animation: pulse 2s infinite;
-      font-size: 12px;
-      color: #fe0032;
-      margin-bottom: 8rem;
-      z-index: 1;
-    }
+@keyframes glow {
+  from { filter: brightness(1); }
+  to { filter: brightness(1.2); }
+}
 
-    @keyframes pulse {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(255, 174, 214, 0.7); }
-      50% { box-shadow: 0 0 0 10px rgba(255, 174, 214, 0); }
-    }
-    .speech-bubble {
-      position: absolute;
-      bottom: 190px;
-      left: 0;
-      background: #fff0f5;
-      color: #fe0032;
-      font-size: 10px;
-      padding: 14px;
-      border: 2px solid #fe69b4;
-      border-radius: 10px;
-      box-shadow: 2px 2px #ff69b4;
-      white-space: nowrap;
-      animation: typewriter 2s steps(20, end) 1 forwards;
-      overflow: hidden;
-      width: 0;
-    }
+.selected-box {
+  background: #ffeff7;
+  border: 3px solid #ffaad4;
+  padding: 20px 20px;
+  border-radius: 12px;
+  animation: pulse 2s infinite;
+  font-size: 12px;
+  color: #fe0032;
+  margin-bottom: 8rem;
+  z-index: 1;
+}
 
-    @keyframes typewriter {
-      from { width: 0; }
-      to { width: 75px; }
-    }
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 174, 214, 0.7); }
+  50% { box-shadow: 0 0 0 10px rgba(255, 174, 214, 0); }
+}
 
-    #levelUpMsg {
-      position: fixed;
-      top: 40%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: #ffb6c1;
-      padding: 20px 30px;
-      border-radius: 20px;
-      font-size: 16px;
-      color: #fff;
-      text-shadow: 1px 1px #ff69b4;
-      border: 3px solid #fff;
-      display: none;
-      z-index: 50;
-    }
+.speech-bubble {
+  position: absolute;
+  bottom: 190px;
+  left: 0;
+  background: #fff0f5;
+  color: #fe0032;
+  font-size: 10px;
+  padding: 14px;
+  border: 2px solid #fe69b4;
+  border-radius: 10px;
+  box-shadow: 2px 2px #ff69b4;
+  white-space: nowrap;
+  animation: typewriter 2s steps(20, end) 1 forwards;
+  overflow: hidden;
+  width: 0;
+}
+
+@keyframes typewriter {
+  from { width: 0; }
+  to { width: 75px; }
+}
+
+#levelUpMsg {
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #ffb6c1;
+  padding: 20px 30px;
+  border-radius: 20px;
+  font-size: 16px;
+  color: #fff;
+  text-shadow: 1px 1px #ff69b4;
+  border: 3px solid #fff;
+  display: none;
+  z-index: 50;
+}
+
+.character-wrapper {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+/* Responsive layout overrides */
+@media (max-width: 991px) {
+  .map {
+    padding-bottom: 80px;
+  }
+  .title {
+    font-size: 2.2rem;
+    padding: 10px;
+  }
+
+  .nodes-container {
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    padding: 20px;
+  }
+
+  /*.node {
+    animation: none;
+  }*/
+
+  .node img {
+    width: 48px;
+    height: 48px;
+  }
+
+  .node-text {
+    font-size: 6px;
+    max-width: 60px;
+    padding: 4px;
+  }
+
+@media (max-width: 991px) {
+  .character {
+    position: relative;
+    left: auto !important;
+    bottom: auto;
+    margin: 0 auto 8px;
+    animation: none;
+  }
+
+  .speech-bubble {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+}
+
+.selected-box {
+  margin-top: 1rem;
+  margin-bottom: 3rem;
+}
+
+
+  .xp-bar {
+    width: 90%;
+    height: 24px;
+  }
+
+  #xpLabel {
+    font-size: 10px;
+    top: 25%;
+  }
+
+  #levelUpMsg {
+    font-size: 14px;
+    padding: 16px 24px;
+    max-width: 90%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.6rem;
+    padding: 8px;
+  }
+
+  .node img {
+    width: 42px;
+    height: 42px;
+  }
+
+  .node-text {
+    font-size: 5px;
+    max-width: 50px;
+  }
+
+  .character {
+    position: absolute;
+    width: 48px;
+    top: 0px;
+  }
+
+  .speech-bubble {
+    bottom: 30px;
+    font-size: 7px;
+  }
+
+  .selected-box {
+    font-size: 10px;
+    padding: 12px;
+  }
+
+  .xp-bar {
+    height: 20px;
+  }
+
+  #xpLabel {
+    font-size: 9px;
+  }
+}
 
   </style>
 </head>
@@ -185,8 +311,10 @@
       to find her main quest</div>
     <div class="selected-box" id="selectedText">Tap coin to select a side quest</div>
     <div class="nodes-container" id="nodesContainer">
-      <img id="character" src="assets/heroine.png" class="character" style="left: -50px;" />
-      <div class="speech-bubble">Move me!</div>
+      <div class="character-wrapper">
+  <img id="character" src="assets/heroine.png" class="character" style="left: -50px;" />
+  <div class="speech-bubble">Move me!</div>
+      </div>
       <div class="node" data-xp="14"><img src="assets/coin.svg" alt="Build an app"/><div class="node-text">Build an app</div></div>
       <div class="node" data-xp="28"><img src="assets/coin.svg" alt="Write a novel"/><div class="node-text">Write a novel</div></div>
       <div class="node" data-xp="42"><img src="assets/coin.svg" alt="Redesign website at 2am"/><div class="node-text">Redesign website at 2am</div></div>
@@ -197,16 +325,14 @@
       <div class="node" data-xp="100"><img src="assets/coin.svg" alt="Overthink it"/><div class="node-text">Overthink it</div></div>
       <div class="node" data-xp="100" id="mainQuestNode" style="display: none;"><img src="assets/chest.svg" alt="Main Quest Found!"/><div class="node-text">Main Quest Found</div></div>
     </div>
-  </div>
-
-  <div class="xp-bar">
+      <div class="xp-bar">
     <div class="xp-fill" id="xpFill"></div>
     <div id="xpLabel" style="position:absolute;width:100%;text-align:center;color:#fe0032;font-size:12px;top:25%;">
       XP: 0%
     </div>
   </div>
-
-  <div id="levelUpMsg">🎉 Level Up! 🎉</div>
+    <div id="levelUpMsg">🎉 Level Up! 🎉</div>
+  </div>
 
 <script>
   const character = document.getElementById('character');
@@ -236,8 +362,14 @@
 
       const rect = node.getBoundingClientRect();
       const containerRect = document.getElementById('nodesContainer').getBoundingClientRect();
+
       const offsetLeft = rect.left - containerRect.left + (rect.width - character.offsetWidth) / 2;
+      const offsetTop = node.offsetTop - 60;
+      
       character.style.left = `${offsetLeft}px`;
+      character.style.top = `${offsetTop}px`;
+
+      character.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
       selectSound.currentTime = 0;
       selectSound.play();
@@ -257,6 +389,11 @@
       hoverSound.play();
     });
   });
+
+  window.addEventListener('DOMContentLoaded', () => {
+  nodes[0].scrollIntoView({ behavior: 'auto', block: 'start' });
+});
+
 </script>
 </body>
 </html>
