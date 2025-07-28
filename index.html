@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Christine's Main Quest Journey</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Press Start 2P', monospace;
+      background: linear-gradient(to bottom, #ffeaf4, #d7f7ff);
+      overflow-x: hidden;
+    }
+
+    .map {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      background: url('assets/background.png') bottom repeat-x;
+      background-size: cover;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .title {
+      font-size: 3rem;
+      color: #fe0032;
+      text-shadow: 2px 2px black;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .nodes-container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      flex-wrap: nowrap;
+      gap: 80px;
+      position: relative;
+    }
+
+    .node {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      text-align: center;
+      cursor: pointer;
+      animation: float 2s ease-in-out infinite;
+    }
+
+    .node img {
+      width: 64px;
+      height: 64px;
+    }
+
+    .node-text {
+      font-size: 8px;
+      color: #222;
+      margin-top: 6px;
+      max-width: 90px;
+      line-height: 1.4;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 4px;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .node:hover img {
+      transform: rotateY(360deg) scale(1.1);
+      transition: transform 0.5s ease;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(-10px); }
+      50% { transform: translateY(0); }
+    }
+
+    .character {
+      width: 64px;
+      transition: left 0.5s ease;
+      z-index: 10;
+      position: absolute;
+      bottom: 130px;
+      animation: bounceUp 1.5s infinite;
+    }
+
+    @keyframes bounceUp {
+      0%, 100% { transform: translateY(-10px); }
+      50% { transform: translateY(0); }
+    }
+
+    .xp-bar {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60%;
+      height: 30px;
+      background: #ffe0eb;
+      border: 2px solid #ffaad4;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .xp-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #fffbd5, #ffb84d);
+      width: 0%;
+      transition: width 0.5s ease;
+      animation: glow 1s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { filter: brightness(1); }
+      to { filter: brightness(1.2); }
+    }
+
+    .selected-box {
+      background: #ffeff7;
+      border: 3px solid #ffaad4;
+      padding: 20px 20px;
+      border-radius: 12px;
+      animation: pulse 2s infinite;
+      font-size: 12px;
+      color: #fe0032;
+      margin-bottom: 8rem;
+      z-index: 1;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255, 174, 214, 0.7); }
+      50% { box-shadow: 0 0 0 10px rgba(255, 174, 214, 0); }
+    }
+    .speech-bubble {
+      position: absolute;
+      bottom: 190px;
+      left: 0;
+      background: #fff0f5;
+      color: #fe0032;
+      font-size: 10px;
+      padding: 14px;
+      border: 2px solid #fe69b4;
+      border-radius: 10px;
+      box-shadow: 2px 2px #ff69b4;
+      white-space: nowrap;
+      animation: typewriter 2s steps(20, end) 1 forwards;
+      overflow: hidden;
+      width: 0;
+    }
+
+    @keyframes typewriter {
+      from { width: 0; }
+      to { width: 75px; }
+    }
+
+    #levelUpMsg {
+      position: fixed;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #ffb6c1;
+      padding: 20px 30px;
+      border-radius: 20px;
+      font-size: 16px;
+      color: #fff;
+      text-shadow: 1px 1px #ff69b4;
+      border: 3px solid #fff;
+      display: none;
+      z-index: 50;
+    }
+
+  </style>
+</head>
+<body>
+  <audio id="selectSound" src="assets/select.mp3" preload="auto"></audio>
+  <audio id="levelUpSound" src="assets/level-up.wav" preload="auto"></audio>
+  <audio id="hoverSound" src="assets/hoverSound.wav" preload="auto"></audio>
+  <div class="map" id="map">
+    <div class="title">Christine's journey<br /> 
+      to find her main quest</div>
+    <div class="selected-box" id="selectedText">Tap coin to select a side quest</div>
+    <div class="nodes-container" id="nodesContainer">
+      <img id="character" src="assets/heroine.png" class="character" style="left: -50px;" />
+      <div class="speech-bubble">Move me!</div>
+      <div class="node" data-xp="14"><img src="assets/coin.svg" alt="Build an app"/><div class="node-text">Build an app</div></div>
+      <div class="node" data-xp="28"><img src="assets/coin.svg" alt="Write a novel"/><div class="node-text">Write a novel</div></div>
+      <div class="node" data-xp="42"><img src="assets/coin.svg" alt="Redesign website at 2am"/><div class="node-text">Redesign website at 2am</div></div>
+      <div class="node" data-xp="57"><img src="assets/coin.svg" alt="Learn game development"/><div class="node-text">Learn game development</div></div>
+      <div class="node" data-xp="71"><img src="assets/coin.svg" alt="Research masters degrees"/><div class="node-text">Research masters degrees</div></div>
+      <div class="node" data-xp="78"><img src="assets/coin.svg" alt="Learn C#"/><div class="node-text">Learn C#</div></div>
+      <div class="node" data-xp="85"><img src="assets/coin.svg" alt="Finish UX Google course"/><div class="node-text">Finish UX Google course</div></div>
+      <div class="node" data-xp="100"><img src="assets/coin.svg" alt="Overthink it"/><div class="node-text">Overthink it</div></div>
+      <div class="node" data-xp="100" id="mainQuestNode" style="display: none;"><img src="assets/chest.svg" alt="Main Quest Found!"/><div class="node-text">Main Quest Found</div></div>
+    </div>
+  </div>
+
+  <div class="xp-bar">
+    <div class="xp-fill" id="xpFill"></div>
+    <div id="xpLabel" style="position:absolute;width:100%;text-align:center;color:#fe0032;font-size:12px;top:25%;">
+      XP: 0%
+    </div>
+  </div>
+
+  <div id="levelUpMsg">🎉 Level Up! 🎉</div>
+
+<script>
+  const character = document.getElementById('character');
+  const nodes = document.querySelectorAll('.node');
+  const xpFill = document.getElementById('xpFill');
+  const xpLabel = document.getElementById('xpLabel');
+  const selectSound = document.getElementById('selectSound');
+  const levelUpSound = document.getElementById('levelUpSound');
+  const hoverSound = document.getElementById('hoverSound');
+  const selectedText = document.getElementById('selectedText');
+  const levelUpMsg = document.getElementById('levelUpMsg');
+  const mainQuestNode = document.getElementById('mainQuestNode');
+
+  let currentXP = 0;
+
+  nodes.forEach((node, index) => {
+    node.style.animationDelay = `${index * 0.15}s`;
+
+    node.addEventListener('click', () => {
+      const xp = parseInt(node.getAttribute('data-xp'));
+      currentXP = xp;
+      xpFill.style.width = `${xp}%`;
+      xpLabel.textContent = `XP: ${xp}%`;
+
+      const img = node.querySelector('img');
+      selectedText.textContent = `You are here: ${img?.alt || node.textContent}`;
+
+      const rect = node.getBoundingClientRect();
+      const containerRect = document.getElementById('nodesContainer').getBoundingClientRect();
+      const offsetLeft = rect.left - containerRect.left + (rect.width - character.offsetWidth) / 2;
+      character.style.left = `${offsetLeft}px`;
+
+      selectSound.currentTime = 0;
+      selectSound.play();
+
+      if (xp === 100) {
+        levelUpSound.currentTime = 0;
+        levelUpSound.play();
+        levelUpMsg.style.display = 'block';
+        setTimeout(() => levelUpMsg.style.display = 'none', 3000);
+      }
+
+      mainQuestNode.style.display = xp === 100 ? 'flex' : 'none';
+    });
+
+    node.addEventListener('mouseenter', () => {
+      hoverSound.currentTime = 0;
+      hoverSound.play();
+    });
+  });
+</script>
+</body>
+</html>
